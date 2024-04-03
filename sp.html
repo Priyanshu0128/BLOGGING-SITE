@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Style for the navbar container */
+.navbar {
+    width: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling */
+}
+
+/* Style for the unordered list (navbar items) */
+.nav-list {
+    display: flex; /* Display items horizontally */
+    list-style: none;
+    padding: 0;
+}
+
+/* Style for individual navbar items */
+.nav-list li {
+    margin-right: 20px; /* Add spacing between items */
+}
+
+/* Style for the anchor links */
+.nav-list li a {
+    text-decoration: none;
+    text-align:justify;
+    color: #333;
+    font-weight: bold;
+}
+
+/* Media query for responsiveness */
+@media (max-width: 768px) {
+    .nav-list {
+        flex-direction: column; /* Display items vertically on small screens */
+        align-items: center; /* Center items vertically */
+    }
+
+    .nav-list li {
+        margin-right: 0;
+        margin-bottom: 10px; /* Add spacing between items */
+    }
+}
+
+        </style>
+    <title>Horizontal Navbar</title>
+</head>
+<body>
+    <div class="navbar">
+        <ul class="nav-list">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Services</a></li>
+            <li><a href="#">Portfolio</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </div>
+</body>
+</html>

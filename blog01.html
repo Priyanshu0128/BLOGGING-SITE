@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blogging Application</title>
+    <style>
+      body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        #loginForm{
+        width : 20%;
+        margin-left : auto;
+        margin-right :auto ;
+        border : solid black thin;
+        padding :2em;
+        background:#afe782;
+        color :black;
+        font-size:.8rem;
+        text-align:center;
+    }
+    #registrationForm{
+        width : 20%;
+        margin-left : auto;
+        margin-right :auto ;
+        border : solid black thin;
+        padding :2em;
+        background:#afe782;
+        color :black;
+        font-size:.8rem;
+        text-align:center;
+    }
+    </style>
+</head>
+<body>
+    <h1>Welcome to the Blogging Application</h1>
+
+    <!-- Registration Form -->
+    <h2>Register</h2>
+    <form id="registrationForm">
+        <input type="text" id="username" placeholder="Username" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button type="submit">Register</button>
+    </form>
+
+    <!-- Login Form -->
+    <h2>Login</h2>
+    <form id="loginForm" style="display:none;">
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+
+    <!-- Blog Creation Form -->
+    <h2>Create Blog</h2>
+    <form id="createBlogForm" style="display:none;">
+        <input type="text" id="blogTitle" placeholder="Title" required>
+        <textarea id="blogContent" placeholder="Content" required></textarea>
+        <select id="blogCategory">
+            <option value="sports">Sports</option>
+            <option value="technology">Technology</option>
+            <option value="food">Food</option>
+        </select>
+        <button type="submit">Create Blog</button>
+    </form>
+
+    <!-- Display Blogs -->
+    <h2>Your Blogs</h2>
+    <div id="blogs"></div>
+//.?
+    <script>
+    // In-memory storage for users and blogs
+const users = [];
+const blogs = [];
+
+// Registration form submission
+document.getElementById("registrationForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+    users.push({ username, password });
+    alert("Registration successful!");
+    event.target.reset();
+});
+
+// Login form submission
+document.getElementById("loginForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const loginUsername = document.getElementById("loginUsername").value;
+    const loginPassword = document.getElementById("loginPassword").value;
+    const user = users.find(u => u.username === loginUsername && u.password === loginPassword);
+    if (user) {
+        alert("Login successful!");
+        displayBlogs(user.username);
+    } else {
+        alert("Invalid credentials. Please try again.");
+    }
+    event.target.reset();
+});
+
+// Create blog form submission
+document.getElementById("createBlogForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+    const blogTitle = document.getElementById("blogTitle").value;
+    const blogContent = document.getElementById("blogContent").value;
+    const blogCategory = document.getElementById("blogCategory").value;
+    blogs.push({ author: loggedInUser, title: blogTitle, content: blogContent, category: blogCategory });
+    displayBlogs(loggedInUser);
+    event.target.reset();
+});
+
+let loggedInUser; // Store the currently logged-in user
+
+// Display blogs of a specific user
+function displayBlogs(username) {
+    loggedInUser = username;
+    const userBlogs = blogs.filter(blog => blog.author === loggedInUser);
+    const blogsContainer = document.getElementById("blogs");
+    blogsContainer.innerHTML = ""; // Clear the container
+    userBlogs.forEach(blog => {
+        const blogDiv = document.createElement("div");
+        blogDiv.innerHTML = `
+            <h3>${blog.title}</h3>
+            <p>${blog.content}</p>
+            <p><strong>Category:</strong> ${blog.category}</p>
+            <button onclick="deleteBlog('${blog.title}')">Delete</button>
+        `;
+        blogsContainer.appendChild(blogDiv);
+    });
+}
+
+// Delete a blog
+function deleteBlog(title) {
+    const index = blogs.findIndex(blog => blog.author === loggedInUser && blog.title === title);
+    if (index !== -1) {
+        blogs.splice(index, 1);
+        displayBlogs(loggedInUser);
+    }
+}
+
+
+    </script>
+</body>
+</html>

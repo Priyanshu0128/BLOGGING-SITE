@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blogging Application</title>
+    <style>
+        body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        #loginForm{
+        width : 20%;
+        margin-left : auto;
+        margin-right :auto ;
+        border : solid black thin;
+        padding :2em;
+        background:#afe782;
+        color :black;
+        font-size:.8rem;
+        text-align:center;
+    }
+       
+    </style>
+</head>
+<body>
+    <div id="loginForm">
+        <input type="text" id="username" placeholder="Username"><br><br>
+        <input type="password" id="password" placeholder="Password"><br><br>
+        <button onclick="login()">Login</button>
+        <button onclick="showRegistrationForm()">Register</button>
+    </div>
+    <div id="registrationForm" style="display: none;">
+        <h3>Register a New User</h3>
+        <input type="text" id="newUsername" placeholder="Username">
+        <input type="password" id="newPassword" placeholder="Password">
+        <button onclick="registerUser()">Register</button>
+        <button onclick="hideRegistrationForm()">Cancel</button>
+    </div>
+    <center>
+    <div id="blogSection" style="display: none;">
+        <h2>Welcome, <span id="loggedInUsername"></span>!</h2><br>
+        
+        <h3>Create a New Blog</h3>
+        <input type="text" id="blogTitle" placeholder="Title"><br><br>
+        <textarea id="blogContent" placeholder="Content"></textarea><br><br>
+        <select id="blogCategory">
+            <option value="sports">Sports</option>
+            <option value="technology">Technology</option>
+            <option value="technology">Music</option>
+        </select><br><br>
+        <span class="options">   
+            <i onClick="editBlog(this)" class="fas fa-edit"></i>
+            <i onClick="deleteBlog(this)" class="fas fa-trash-alt"></i>
+            </span>   
+        <button onclick="createBlog()">Create Blog</button>
+        
+        <h3>Your Blogs</h3>
+        
+        <ul id="userBlogs"></ul>
+        
+
+        
+        <button onclick="logout()">Logout</button>
+    </div>
+</center>
+    <script>
+        let currentUser = null;
+        let blogs = [];
+
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            currentUser = username;
+            
+            document.getElementById('loggedInUsername').textContent = currentUser;
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('blogSection').style.display = 'block';
+            
+            updateBlogList();
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('blogSection').style.display = 'none';
+        }
+
+        function createBlog() {
+            const title = document.getElementById('blogTitle').value;
+            const content = document.getElementById('blogContent').value;
+            const category = document.getElementById('blogCategory').value;
+
+            blogs.push({ title, content, category });
+            updateBlogList();
+            
+            document.getElementById('blogTitle').value = '';
+            document.getElementById('blogContent').value = '';
+        }
+
+        
+        function showRegistrationForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registrationForm').style.display = 'block';
+        }
+        
+        function hideRegistrationForm() {
+            document.getElementById('registrationForm').style.display = 'none';
+            document.getElementById('loginForm').style.display = 'block';
+        }
+        
+        function registerUser() {
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            
+            // Perform user registration logic (e.g., sending data to the backend)
+            // For simplicity, we'll assume the registration is successful.
+            currentUser = newUsername;
+            
+            document.getElementById('loggedInUsername').textContent = currentUser;
+            hideRegistrationForm();
+            document.getElementById('blogSection').style.display = 'block';
+        }
+
+        function deleteBlog(index) {
+            blogs.splice(index, 1);
+            updateBlogList();
+        }
+
+        function updateBlog(index) {
+            const updatedTitle = prompt('Enter updated title:');
+            const updatedContent = prompt('Enter updated content:');
+            const updatedCategory = prompt('Enter updated category:');
+
+            blogs[index].title = updatedTitle;
+            blogs[index].content = updatedContent;
+            blogs[index].category = updatedCategory;
+
+            updateBlogList();
+        }
+
+        function updateBlogList() {
+            const userBlogs = document.getElementById('userBlogs');
+            userBlogs.innerHTML = '';
+
+            for (let i = 0; i < blogs.length; i++) {
+                const blog = blogs[i];
+                const li = document.createElement('li');
+                li.textContent = `${blog.title} - ${blog.category}`;
+                
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Delete';
+                deleteButton.onclick = function() {
+                    deleteBlog(i);
+                };
+
+                const updateButton = document.createElement('button');
+                updateButton.textContent = 'Update';
+                updateButton.onclick = function() {
+                    updateBlog(i);
+                };
+
+                li.appendChild(deleteButton);
+                li.appendChild(updateButton);
+
+                userBlogs.appendChild(li);
+            }
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blogging Application</title>
+</head>
+<body>
+    
+    
+    <div id="blogSection" style="display: none;">
+        <!-- ... (same as before) ... -->
+        
+        <h3>Your Blogs</h3>
+        <ul id="userBlogs"></ul>
+    </div>
+
+    <script>
+        // ... (previous code) ...
+//    const users = [];
+// let blogs = [];
+
+// function showRegistrationForm() {
+//   document.getElementById("loginForm").style.display = "none";
+//   document.getElementById("registrationForm").style.display = "block";
+// }
+
+// function showLoginForm() {
+//   document.getElementById("registrationForm").style.display = "none";
+//   document.getElementById("loginForm").style.display = "block";
+// }
+
+// function login() {
+//   const username = document.getElementById("username").value;
+//   const password = document.getElementById("password").value;
+  
+//   // Mock authentication - replace with proper authentication logic
+
+// //   if (username === "root" && password === "12345") {
+// //     currentUser = username;
+// //     showBlogSection();
+// //   } else {
+// //     alert("Invalid credentials");
+// //   }
+// const user = users.find(u => u.username === username && u.password === password);
+//             if (user) {
+//                 alert('Login successful. Welcome, ' + user.username + '!');
+//                 showBlogSection();
+//             } else {
+//                 alert('Login failed. Please check your username and password.');
+//             }
+// }
+
+// function logout() {
+//             currentUser = null;
+//             document.getElementById('loginForm').style.display = 'block';
+//             document.getElementById('blogSection').style.display = 'none';
+//         }
+
+// function register() {
+//   const regUsername = document.getElementById("regUsername").value;
+//   const regPassword = document.getElementById("regPassword").value;
+  
+//   users.push({ username: regUsername, password: regPassword });
+//             alert('Registration successful. You can now log in.');
+// }
+        
+    </script>
+</body>
+</html>
+<!-- <!DOCTYPE html>
+<html>
+<head>
+  <title>Blogging Application</title>
+</head>
+<style>
+    body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        #authSection{
+        width : 20%;
+        margin-left : auto;
+        margin-right :auto ;
+        border : solid black thin;
+        padding :2em;
+        background:#afe782;
+        color :black;
+        font-size:.8rem;
+        text-align:center;
+    }
+</style>
+<body>
+  <center><h1>Welcome to Our Blogging Application</h1></center>
+
+   User Authentication and Registration
+  <div id="authSection">
+    <h2>Authentication</h2>
+    <input type="text" id="username" placeholder="Username"><br><br>
+    <input type="password" id="password" placeholder="Password"><br><br>
+    <button onclick="login()">Log In</button>
+    <button onclick="showRegistrationForm()">Register</button>
+  </div>
+  <div id="registrationForm" style="display: none;">
+    <h3>Register a New User</h3>
+    <input type="text" id="newUsername" placeholder="Username">
+    <input type="password" id="newPassword" placeholder="Password">
+    <button onclick="registerUser()">Register</button>
+    <button onclick="hideRegistrationForm()">Cancel</button>
+</div>
+ Blog Management Section
+  <div id="blogSection" style="display: none;">
+    <h2>My Blogs</h2>
+    <button onclick="createBlog()">Create New Blog</button>
+    <div id="blogs">
+      
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let blogs = [];
+
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Simplified authentication logic
+      // In a real application, you would send this data to a server for validation
+      if (username === 'username' && password === 'password') {
+        currentUser = username;
+        showBlogSection();
+      } else {
+        alert('Invalid credentials');
+      }
+    }
+
+    function register() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Simplified registration logic
+      // In a real application, you would send this data to a server for registration
+      // You would also need to handle duplicate usernames and password hashing
+      alert('Registration successful');
+    }
+
+    function showBlogSection() {
+      document.getElementById('authSection').style.display = 'none';
+      document.getElementById('blogSection').style.display = 'block';
+      loadBlogs();
+    }
+
+    function loadBlogs() {
+      // Simplified blog loading logic
+      // In a real application, you would fetch the user's blogs from a database
+      // and populate the 'blogs' array
+      blogs = [
+        { title: 'First Blog', content: 'This is my first blog post.' },
+        { title: 'Second Blog', content: 'Another blog post by me.' }
+      ];
+      displayBlogs();
+    }
+
+    function displayBlogs() {
+      const blogsContainer = document.getElementById('blogs');
+      blogsContainer.innerHTML = '';
+
+      for (const blog of blogs) {
+        const blogElement = document.createElement('div');
+        blogElement.innerHTML = `
+          <h3>${blog.title}</h3>
+          <p>${blog.content}</p>
+          <button onclick="editBlog('${blog.title}')">Edit</button>
+          <button onclick="deleteBlog('${blog.title}')">Delete</button>
+        `;
+        blogsContainer.appendChild(blogElement);
+      }
+    }
+
+    function createBlog() {
+      const title = prompt('Enter blog title:');
+      const content = prompt('Enter blog content:');
+
+      // Simplified blog creation logic
+      // In a real application, you would send this data to a server to create a new blog
+      blogs.push({ title, content });
+      displayBlogs();
+    }
+
+    function editBlog(title) {
+      const newContent = prompt('Edit blog content:');
+
+      // Simplified blog editing logic
+      // In a real application, you would send the updated content to a server
+      const blog = blogs.find(blog => blog.title === title);
+      if (blog) {
+        blog.content = newContent;
+        displayBlogs();
+      }
+    }
+
+    function deleteBlog(title) {
+      // Simplified blog deletion logic
+      // In a real application, you would send a request to the server to delete the blog
+      blogs = blogs.filter(blog => blog.title !== title);
+      displayBlogs();
+    }
+  </script>
+</body>
+</html> -->

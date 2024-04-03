@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Blogging Application</title>
+  <style>
+    body{font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
+        #loginForm , #registrationForm{
+        width : 20%;
+        margin-left : auto;
+        margin-right :auto ;
+        border : solid black thin;      
+        padding :2em;
+        background:#00bcd4;
+        color :black;
+        font-size:.8rem;
+        text-align:center;
+    }
+    #blogSection{
+        width : 30%;
+        margin-left : auto;
+        margin-right :auto ;
+        border : solid black thin;
+        padding :2em;
+        background:#00bcd4;
+        color :black;
+        font-size:.8rem;
+        text-align:center;
+    }
+  </style>
+</head>
+<body>
+  
+  <center><h1> Blogging App</h1></center>
+  <div id="loginForm">
+    <h3>Log in</h3>
+    <input type="text" id="username" placeholder="Username" required><br><br>
+    <input type="password" id="password" placeholder="Password" required><br><br>
+    <button onclick="login()">Login</button>
+    <button onclick="showRegistrationForm()">Register</button><br><br>
+    <!-- <form action="/forgot-password" method="post">
+      <input type="email" id="email" name="email" placeholder="Email address" style="display: none;">
+      <button type="submit">Reset Password</button>
+    </form> -->
+  </div>
+  <div id="registrationForm" style="display: none;">
+    <h3>Register</h3>
+    <input type="text" id="regUsername" placeholder="Username" required><br><br>
+    <input type="password" id="regPassword" placeholder="Password" required><br><br>
+    <input type="password" id="rrp" placeholder="Re write Password" required/><br><br>
+    <button onclick="register()">Register</button>
+    <button onclick="showLoginForm()">Back to Login</button>
+  </div>
+  <center>  <div id="blogSection" style="display: none;">
+    <h2>My Blogs</h2>
+    <!-- <form id="createBlogForm" style="display:none;"> -->
+        <select id="blogCategory">
+          <option value="food">Music</option>
+          <option value="env">Environment</option>
+            <option value="sports">Sports</option>
+            <option value="technology">Technology</option>
+            
+        </select><br><br>
+        <input type="text" id="blogTitle" placeholder="Title" required><br><br>
+        <textarea  rows="10" cols="30" id="blogContent" placeholder="Content" required></textarea><br><br>
+    <!-- </form> -->
+    <button onclick="createBlog()">Create New Blog</button><br><br>
+    <div id="blogs"></div>
+    <button onclick="logout()">Logout</button>
+  </div>
+</center>
+
+  <script>
+   const users = [];
+let blogs = [];
+
+function showRegistrationForm() {
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("registrationForm").style.display = "block";
+}
+
+function showLoginForm() {
+  document.getElementById("registrationForm").style.display = "none";
+  document.getElementById("loginForm").style.display = "block";
+}
+
+function login() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  
+  
+const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                alert('Login successful. Welcome, ' + user.username + '!');
+                showBlogSection();
+            } else {
+                alert('Login failed. Please check your username and password.');
+            }
+}
+var currentUser;
+function logout() {
+  if (currentUser !== null) {
+            currentUser = null;
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('blogSection').style.display = 'none';
+            document.getElementById("username").value ="";
+            document.getElementById("password").value ="";
+        }
+      }
+function register() 
+{
+  const regUsername = document.getElementById("regUsername").value;
+  const regPassword = document.getElementById("regPassword").value;
+  
+  users.push({ username: regUsername, password: regPassword });
+            alert('Registration successful. You can now log in.');
+            document.getElementById("regUsername").value ="";
+        document.getElementById("regPassword").value="";
+        document.getElementById("rrp").value="";
+}
+
+function showBlogSection() {
+  document.getElementById("loginForm").style.display = "none";
+  document.getElementById("registrationForm").style.display = "none";
+  document.getElementById("blogSection").style.display = "block";
+  renderBlogs();
+}
+function forgotPassword() {
+  // Get the email address from the user.
+  var email = document.getElementById('email').value;
+
+  // Send an email to the user with a link to reset their password.
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', '/forgot-password', true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.send(JSON.stringify({
+    email: email
+  }));
+
+  // Redirect the user to the reset password page.
+  window.location.href = '/reset-password';
+}
+function createBlog() {
+    const title = document.getElementById('blogTitle').value;
+            const content = document.getElementById('blogContent').value;
+            const category = document.getElementById('blogCategory').value;
+
+            blogs.push({ title, content, category });
+           // updateBlogList();
+            
+            document.getElementById('blogTitle').value = '';
+            document.getElementById('blogContent').value = '';
+           // document.getElementById('blogCategory').selectedIndex= 'default';
+            renderBlogs();
+}
+// ... Previous code ...
+//.?
+// function updateBlog(index) {
+//   const newContent = prompt("Update blog content:");
+//   if (newContent !== null) {
+//     blogs[index].content = newContent;
+//     renderBlogs();
+//   }
+// }
+function updateBlog(index) {
+    const blogDiv = document.getElementById(`blog_${index}`);
+    const contentElement = blogDiv.querySelector(".content");
+    const titleElement = blogDiv.querySelector(".title");                    
+    const updateForm = document.createElement("div");
+    updateForm.innerHTML = `
+    <input type="text" id="blogti_${index}" value= "${blogs[index].title}"required> <br><br>
+      <textarea id="updateContent_${index}" rows="10" cols="30">${blogs[index].content}</textarea><br>
+      <button onclick="saveUpdatedContent(${index})">Save</button><br>
+      <button onclick="cancelUpdate(${index})">Cancel</button><br>
+    `;
+    blogDiv.replaceChild(updateForm, contentElement,titleElement);
+  }
+  
+  function saveUpdatedContent(index) {
+    const updatedContent = document.getElementById(`updateContent_${index}`).value;
+    const blogti = document.getElementById(`blogti_${index}`).value;
+    blogs[index].content = updatedContent;
+    blogs[index].title = blogti;
+    renderBlogs();
+  }
+  
+  function cancelUpdate(index) {
+    renderBlogs();
+  }
+
+function deleteBlog(index) {
+  if (confirm("Are you sure you want to delete this blog?")) {
+    blogs.splice(index, 1);
+    renderBlogs();
+  }
+}
+
+// function renderBlogs() {
+//   const blogsDiv = document.getElementById("blogs");
+//   blogsDiv.innerHTML = "";
+//   for (let i = 0; i < blogs.length; i++) {
+//     const blogDiv = document.createElement("div");
+//     blogDiv.innerHTML = `
+//       <h3>${blogs[i].title}</h3>
+//       <p>${blogs[i].content}</p>
+//       <button onclick="updateBlog(${i})">Update</button>
+//       <button onclick="deleteBlog(${i})">Delete</button>
+//     `;
+//     blogsDiv.appendChild(blogDiv);
+//   }
+// }
+function renderBlogs() {
+    const blogsDiv = document.getElementById("blogs");
+    blogsDiv.innerHTML = "";
+    for (let i = 0; i < blogs.length; i++) {
+      const blogDiv = document.createElement("div");
+      blogDiv.id = `blog_${i}`;
+      blogDiv.innerHTML = `
+        <h3 class="title">${blogs[i].title}</h3>
+        <p class="content">${blogs[i].content}</p>
+        <button onclick="updateBlog(${i})">Update</button>
+        <button onclick="deleteBlog(${i})">Delete</button>
+      `;
+      blogsDiv.appendChild(blogDiv);
+    }
+  }
+  </script>
+</body>
+</html>

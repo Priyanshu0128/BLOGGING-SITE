@@ -38,7 +38,7 @@
 } */
 
 /* div.scrollmenu .card {
-  display: inline-block;
+  display: inline-block; 
   color: white;
   text-align: center;
   padding: 14px;
